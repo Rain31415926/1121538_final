@@ -299,7 +299,7 @@ namespace _1121538_徐霈綺_final
         private void SetupUI()
         {
             this.Text = string.IsNullOrEmpty(CurrentTask.Content) ? "新增任務" : "編輯任務";
-            this.Size = new Size(400, 500);
+            this.Size = new Size(430, 500);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -307,10 +307,10 @@ namespace _1121538_徐霈綺_final
             this.Font = new Font("Segoe UI", 9.5f);
 
             var lblTaskName = new Label { Text = "任務名稱:", Location = new Point(20, 20), AutoSize = true };
-            txtTaskName = new TextBox { Location = new Point(100, 18), Width = 250 };
+            txtTaskName = new TextBox { Location = new Point(100, 18), Width = 280 };
 
             var lblTags = new Label { Text = "標籤(以空白或逗號隔開):", Location = new Point(20, 60), AutoSize = true };
-            txtTags = new TextBox { Location = new Point(180, 58), Width = 170 };
+            txtTags = new TextBox { Location = new Point(190, 58), Width = 190 };
 
             chkHasDueDate = new CheckBox { Text = "設定截止日期", Location = new Point(20, 100), AutoSize = true };
             dtpDueDate = new DateTimePicker { Location = new Point(140, 98), Width = 210, Format = DateTimePickerFormat.Short, Enabled = false };
@@ -610,9 +610,14 @@ namespace _1121538_徐霈綺_final
             var colDueDate = new DataGridViewTextBoxColumn { Name = "DueDate", HeaderText = "截止日期", Width = 100, ReadOnly = true };
             var colPriority = new DataGridViewTextBoxColumn { Name = "Priority", HeaderText = "優先級", Width = 80, ReadOnly = true };
             var colProgress = new DataGridViewTextBoxColumn { Name = "Progress", HeaderText = "進度", Width = 60, ReadOnly = true };
-            
+
             dgvTasks.Columns.AddRange(new DataGridViewColumn[] { colExpand, colStatus, colContent, colTags, colDueDate, colPriority, colProgress });
-            
+
+            foreach (DataGridViewColumn col in dgvTasks.Columns)
+            {
+                col.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+
             dgvTasks.CellClick += DgvTasks_CellClick;
             dgvTasks.CellContentClick += DgvTasks_CellContentClick;
             dgvTasks.CellDoubleClick += DgvTasks_CellDoubleClick;
