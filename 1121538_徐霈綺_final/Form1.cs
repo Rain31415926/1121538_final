@@ -589,7 +589,7 @@ namespace _1121538_徐霈綺_final
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 RowHeadersVisible = true,
                 RowHeadersWidth = 30,
-                MultiSelect = false,
+                MultiSelect = true,
                 ReadOnly = false,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.Fixed3D,
@@ -663,9 +663,12 @@ namespace _1121538_徐霈綺_final
             dgvTasks.CellMouseDown += (s, e) => {
                 if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
                 {
-                    dgvTasks.ClearSelection();
-                    dgvTasks.Rows[e.RowIndex].Selected = true;
-                    dgvTasks.CurrentCell = dgvTasks.Rows[e.RowIndex].Cells[e.ColumnIndex >= 0 ? e.ColumnIndex : 0];
+                    if (!dgvTasks.Rows[e.RowIndex].Selected)
+                    {
+                        dgvTasks.ClearSelection();
+                        dgvTasks.Rows[e.RowIndex].Selected = true;
+                        dgvTasks.CurrentCell = dgvTasks.Rows[e.RowIndex].Cells[e.ColumnIndex >= 0 ? e.ColumnIndex : 0];
+                    }
                 }
             };
 
@@ -970,16 +973,30 @@ namespace _1121538_徐霈綺_final
         {
             if (dgvTasks.SelectedRows.Count > 0)
             {
-                var data = dgvTasks.SelectedRows[0].Tag as GridRowDisplayData;
-                if (data != null && !data.IsSubTask)
+                bool deletedAny = false;
+                bool warnedSubTask = false;
+                foreach (DataGridViewRow row in dgvTasks.SelectedRows)
                 {
-                    _allTasks.Remove(data.Parent);
+                    var data = row.Tag as GridRowDisplayData;
+                    if (data != null && !data.IsSubTask)
+                    {
+                        _allTasks.Remove(data.Parent);
+                        deletedAny = true;
+                    }
+                    else if (data != null && data.IsSubTask)
+                    {
+                        if (!warnedSubTask)
+                        {
+                            MessageBox.Show("請透過雙擊父任務，在編輯視窗中刪除子任務。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            warnedSubTask = true;
+                        }
+                    }
+                }
+
+                if (deletedAny)
+                {
                     UpdateFilterTagsComboBox();
                     ApplyFilters();
-                }
-                else if (data != null && data.IsSubTask)
-                {
-                    MessageBox.Show("請透過雙擊父任務，在編輯視窗中刪除子任務。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
