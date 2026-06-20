@@ -299,7 +299,7 @@ namespace _1121538_徐霈綺_final
         private void SetupUI()
         {
             this.Text = string.IsNullOrEmpty(CurrentTask.Content) ? "新增任務" : "編輯任務";
-            this.Size = new Size(380, 500);
+            this.Size = new Size(400, 500);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -307,20 +307,20 @@ namespace _1121538_徐霈綺_final
             this.Font = new Font("Segoe UI", 9.5f);
 
             var lblTaskName = new Label { Text = "任務名稱:", Location = new Point(20, 20), AutoSize = true };
-            txtTaskName = new TextBox { Location = new Point(100, 18), Width = 230 };
+            txtTaskName = new TextBox { Location = new Point(100, 18), Width = 250 };
 
             var lblTags = new Label { Text = "標籤(以空白或逗號隔開):", Location = new Point(20, 60), AutoSize = true };
-            txtTags = new TextBox { Location = new Point(180, 58), Width = 150 };
+            txtTags = new TextBox { Location = new Point(180, 58), Width = 170 };
 
-            chkHasDueDate = new CheckBox { Text = "設定截止日期", Location = new Point(20, 100), Width = 110 };
-            dtpDueDate = new DateTimePicker { Location = new Point(130, 98), Width = 200, Format = DateTimePickerFormat.Short, Enabled = false };
+            chkHasDueDate = new CheckBox { Text = "設定截止日期", Location = new Point(20, 100), AutoSize = true };
+            dtpDueDate = new DateTimePicker { Location = new Point(140, 98), Width = 210, Format = DateTimePickerFormat.Short, Enabled = false };
             chkHasDueDate.CheckedChanged += (s, e) => { dtpDueDate.Enabled = chkHasDueDate.Checked; };
 
             var lblPriority = new Label { Text = "優先級:", Location = new Point(20, 140), AutoSize = true };
             cmbPriority = new ComboBox { Location = new Point(100, 138), Width = 120, DropDownStyle = ComboBoxStyle.DropDownList };
             cmbPriority.Items.AddRange(new object[] { "High", "Medium", "Low" });
 
-            chkIsCompleted = new CheckBox { Text = "已完成", Location = new Point(20, 180), Width = 80 };
+            chkIsCompleted = new CheckBox { Text = "已完成", Location = new Point(20, 180), AutoSize = true };
 
             var lblColor = new Label { Text = "顏色標示:", Location = new Point(120, 180), AutoSize = true };
             pnlColorPreview = new Panel { Location = new Point(190, 178), Size = new Size(20, 20), BorderStyle = BorderStyle.FixedSingle };
@@ -333,9 +333,9 @@ namespace _1121538_徐霈綺_final
 
             var lblSubTasks = new Label { Text = "子任務:", Location = new Point(20, 260), AutoSize = true };
             txtSubTask = new TextBox { Location = new Point(100, 258), Width = 130 };
-            var btnAddSubTask = new Button { Text = "新增", Location = new Point(235, 256), Width = 45 };
-            var btnDeleteSubTask = new Button { Text = "刪除", Location = new Point(285, 256), Width = 45 };
-            clbSubTasks = new CheckedListBox { Location = new Point(20, 290), Size = new Size(310, 85) };
+            var btnAddSubTask = new Button { Text = "新增", Location = new Point(235, 256), Width = 55 };
+            var btnDeleteSubTask = new Button { Text = "刪除", Location = new Point(295, 256), Width = 55 };
+            clbSubTasks = new CheckedListBox { Location = new Point(20, 290), Size = new Size(330, 85) };
 
             btnAddSubTask.Click += (s, e) => {
                 if(!string.IsNullOrWhiteSpace(txtSubTask.Text)) {
@@ -350,10 +350,10 @@ namespace _1121538_徐霈綺_final
                 }
             };
 
-            btnOk = new Button { Text = "確認 (OK)", Location = new Point(80, 400), Width = 100, BackColor = Color.FromArgb(224, 224, 224), FlatStyle = FlatStyle.Flat };
+            btnOk = new Button { Text = "確認 (OK)", Location = new Point(90, 400), Width = 100, BackColor = Color.FromArgb(224, 224, 224), FlatStyle = FlatStyle.Flat };
             btnOk.Click += BtnOk_Click;
 
-            btnCancel = new Button { Text = "取消 (Cancel)", Location = new Point(190, 400), Width = 100, BackColor = Color.FromArgb(224, 224, 224), FlatStyle = FlatStyle.Flat };
+            btnCancel = new Button { Text = "取消 (Cancel)", Location = new Point(200, 400), Width = 100, BackColor = Color.FromArgb(224, 224, 224), FlatStyle = FlatStyle.Flat };
             btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
 
             this.Controls.Add(lblTaskName);
@@ -622,6 +622,41 @@ namespace _1121538_徐霈綺_final
             dgvTasks.DragEnter += DgvTasks_DragEnter;
             dgvTasks.DragOver += DgvTasks_DragOver;
             dgvTasks.DragDrop += DgvTasks_DragDrop;
+
+            // Context Menu for DataGridView
+            var ctxMenu = new ContextMenuStrip();
+            var menuEdit = new ToolStripMenuItem("編輯 (Edit)");
+            var menuDelete = new ToolStripMenuItem("刪除 (Delete)");
+            menuEdit.Click += (s, e) => {
+                if (dgvTasks.SelectedRows.Count > 0)
+                {
+                    var data = dgvTasks.SelectedRows[0].Tag as GridRowDisplayData;
+                    if (data != null && !data.IsSubTask)
+                    {
+                        using (var dialog = new TaskDialogForm(data.Parent))
+                        {
+                            if (dialog.ShowDialog() == DialogResult.OK)
+                            {
+                                UpdateFilterTagsComboBox();
+                                ApplyFilters();
+                            }
+                        }
+                    }
+                }
+            };
+            menuDelete.Click += BtnDelete_Click;
+            ctxMenu.Items.Add(menuEdit);
+            ctxMenu.Items.Add(menuDelete);
+            dgvTasks.ContextMenuStrip = ctxMenu;
+
+            dgvTasks.CellMouseDown += (s, e) => {
+                if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
+                {
+                    dgvTasks.ClearSelection();
+                    dgvTasks.Rows[e.RowIndex].Selected = true;
+                    dgvTasks.CurrentCell = dgvTasks.Rows[e.RowIndex].Cells[e.ColumnIndex >= 0 ? e.ColumnIndex : 0];
+                }
+            };
 
             var btnNew = new Button { Text = "New File (建立新檔)", Location = new Point(20, 570), Width = 140, Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
             btnNew.Click += BtnNew_Click;
