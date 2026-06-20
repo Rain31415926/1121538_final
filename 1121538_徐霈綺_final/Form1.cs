@@ -587,7 +587,8 @@ namespace _1121538_徐霈綺_final
                 AllowUserToDeleteRows = false,
                 AllowDrop = true,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                RowHeadersVisible = false,
+                RowHeadersVisible = true,
+                RowHeadersWidth = 30,
                 MultiSelect = false,
                 ReadOnly = false,
                 BackgroundColor = Color.White,
@@ -596,6 +597,11 @@ namespace _1121538_徐霈綺_final
                 GridColor = Color.FromArgb(224, 224, 224),
                 EnableHeadersVisualStyles = false
             };
+            dgvTasks.DefaultCellStyle.SelectionBackColor = Color.White;
+            dgvTasks.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvTasks.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(250, 250, 250);
+            dgvTasks.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+
             dgvTasks.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
             dgvTasks.ColumnHeadersDefaultCellStyle.Font = new Font(this.Font, FontStyle.Bold);
             dgvTasks.ColumnHeadersDefaultCellStyle.ForeColor = Color.Black;
@@ -1279,16 +1285,29 @@ namespace _1121538_徐霈綺_final
                         if (!t.IsCompleted && t.DueDate.HasValue && t.DueDate.Value.Date < DateTime.Today)
                         {
                             row.DefaultCellStyle.ForeColor = Color.Red;
+                            row.DefaultCellStyle.SelectionForeColor = Color.Red;
                             row.DefaultCellStyle.Font = new Font(dgvTasks.Font, FontStyle.Bold);
                         }
 
                         if (t.ItemColor.ToArgb() != Color.White.ToArgb() && t.ItemColor.ToArgb() != Color.Transparent.ToArgb())
                         {
                             row.DefaultCellStyle.BackColor = t.ItemColor;
+                            row.DefaultCellStyle.SelectionBackColor = t.ItemColor;
 
                             // Contrast logic
                             if (t.ItemColor.R * 0.299 + t.ItemColor.G * 0.587 + t.ItemColor.B * 0.114 < 128)
+                            {
                                 row.DefaultCellStyle.ForeColor = Color.White; // Only override text if background is too dark
+                                row.DefaultCellStyle.SelectionForeColor = Color.White;
+                            }
+                            else
+                            {
+                                row.DefaultCellStyle.SelectionForeColor = Color.Black;
+                            }
+                        }
+                        else
+                        {
+                            row.DefaultCellStyle.SelectionBackColor = rowIndex % 2 == 0 ? Color.White : Color.FromArgb(250, 250, 250);
                         }
 
                         if (t.IsCompleted)
@@ -1309,6 +1328,8 @@ namespace _1121538_徐霈綺_final
 
                         row.DefaultCellStyle.BackColor = Color.WhiteSmoke;
                         row.DefaultCellStyle.ForeColor = Color.Black;
+                        row.DefaultCellStyle.SelectionBackColor = Color.WhiteSmoke;
+                        row.DefaultCellStyle.SelectionForeColor = Color.Black;
 
                         if (st.IsCompleted)
                         {
