@@ -299,31 +299,32 @@ namespace _1121538_徐霈綺_final
         private void SetupUI()
         {
             this.Text = string.IsNullOrEmpty(CurrentTask.Content) ? "新增任務" : "編輯任務";
-            this.Size = new Size(350, 480);
+            this.Size = new Size(380, 500);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.Font = new Font("Segoe UI", 9.5f);
 
             var lblTaskName = new Label { Text = "任務名稱:", Location = new Point(20, 20), AutoSize = true };
-            txtTaskName = new TextBox { Location = new Point(100, 18), Width = 200 };
+            txtTaskName = new TextBox { Location = new Point(100, 18), Width = 230 };
 
-            var lblTags = new Label { Text = "標籤(以空隔或逗號隔開):", Location = new Point(20, 60), AutoSize = true };
-            txtTags = new TextBox { Location = new Point(160, 58), Width = 140 };
+            var lblTags = new Label { Text = "標籤(以空白或逗號隔開):", Location = new Point(20, 60), AutoSize = true };
+            txtTags = new TextBox { Location = new Point(180, 58), Width = 150 };
 
-            chkHasDueDate = new CheckBox { Text = "設定截止日期", Location = new Point(20, 100), Width = 100 };
-            dtpDueDate = new DateTimePicker { Location = new Point(130, 98), Width = 170, Format = DateTimePickerFormat.Short, Enabled = false };
+            chkHasDueDate = new CheckBox { Text = "設定截止日期", Location = new Point(20, 100), Width = 110 };
+            dtpDueDate = new DateTimePicker { Location = new Point(130, 98), Width = 200, Format = DateTimePickerFormat.Short, Enabled = false };
             chkHasDueDate.CheckedChanged += (s, e) => { dtpDueDate.Enabled = chkHasDueDate.Checked; };
 
             var lblPriority = new Label { Text = "優先級:", Location = new Point(20, 140), AutoSize = true };
             cmbPriority = new ComboBox { Location = new Point(100, 138), Width = 120, DropDownStyle = ComboBoxStyle.DropDownList };
             cmbPriority.Items.AddRange(new object[] { "High", "Medium", "Low" });
 
-            chkIsCompleted = new CheckBox { Text = "已完成", Location = new Point(20, 180), Width = 100 };
+            chkIsCompleted = new CheckBox { Text = "已完成", Location = new Point(20, 180), Width = 80 };
 
-            var lblColor = new Label { Text = "顏色標示:", Location = new Point(140, 180), AutoSize = true };
-            pnlColorPreview = new Panel { Location = new Point(210, 178), Size = new Size(20, 20), BorderStyle = BorderStyle.FixedSingle };
-            btnPickColor = new Button { Text = "選色", Location = new Point(240, 175), Width = 60 };
+            var lblColor = new Label { Text = "顏色標示:", Location = new Point(120, 180), AutoSize = true };
+            pnlColorPreview = new Panel { Location = new Point(190, 178), Size = new Size(20, 20), BorderStyle = BorderStyle.FixedSingle };
+            btnPickColor = new Button { Text = "選色", Location = new Point(220, 175), Width = 60 };
             btnPickColor.Click += BtnPickColor_Click;
 
             var lblRecurrence = new Label { Text = "重複頻率:", Location = new Point(20, 220), AutoSize = true };
@@ -331,11 +332,11 @@ namespace _1121538_徐霈綺_final
             cmbRecurrence.Items.AddRange(new object[] { "無", "每天 (Daily)", "每週 (Weekly)", "每月 (Monthly)" });
 
             var lblSubTasks = new Label { Text = "子任務:", Location = new Point(20, 260), AutoSize = true };
-            txtSubTask = new TextBox { Location = new Point(100, 258), Width = 110 };
-            var btnAddSubTask = new Button { Text = "新增", Location = new Point(215, 256), Width = 45 };
-            var btnDeleteSubTask = new Button { Text = "刪除", Location = new Point(265, 256), Width = 45 };
-            clbSubTasks = new CheckedListBox { Location = new Point(20, 285), Size = new Size(295, 80) };
-            
+            txtSubTask = new TextBox { Location = new Point(100, 258), Width = 130 };
+            var btnAddSubTask = new Button { Text = "新增", Location = new Point(235, 256), Width = 45 };
+            var btnDeleteSubTask = new Button { Text = "刪除", Location = new Point(285, 256), Width = 45 };
+            clbSubTasks = new CheckedListBox { Location = new Point(20, 290), Size = new Size(310, 85) };
+
             btnAddSubTask.Click += (s, e) => {
                 if(!string.IsNullOrWhiteSpace(txtSubTask.Text)) {
                     var st = new SubTask { Content = txtSubTask.Text.Trim() };
@@ -349,10 +350,10 @@ namespace _1121538_徐霈綺_final
                 }
             };
 
-            btnOk = new Button { Text = "確認 (OK)", Location = new Point(60, 390), Width = 90 };
+            btnOk = new Button { Text = "確認 (OK)", Location = new Point(80, 400), Width = 100, BackColor = Color.FromArgb(224, 224, 224), FlatStyle = FlatStyle.Flat };
             btnOk.Click += BtnOk_Click;
 
-            btnCancel = new Button { Text = "取消 (Cancel)", Location = new Point(170, 390), Width = 90 };
+            btnCancel = new Button { Text = "取消 (Cancel)", Location = new Point(190, 400), Width = 100, BackColor = Color.FromArgb(224, 224, 224), FlatStyle = FlatStyle.Flat };
             btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
 
             this.Controls.Add(lblTaskName);
