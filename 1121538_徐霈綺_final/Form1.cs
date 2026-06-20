@@ -1566,6 +1566,16 @@ namespace _1121538_徐霈綺_final
             if (_timeLeftSeconds <= 0)
             {
                 _timer.Stop();
+
+                try
+                {
+                    using (var player = new System.Media.SoundPlayer(Properties.Resources.鈴聲))
+                    {
+                        player.Play();
+                    }
+                }
+                catch { /* 忽略鈴聲播放錯誤 */ }
+
                 MessageBox.Show("25 分鐘專注完成！請休息 5 分鐘。", "專注完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
             }
