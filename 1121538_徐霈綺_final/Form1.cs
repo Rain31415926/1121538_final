@@ -581,14 +581,27 @@ namespace _1121538_徐霈綺_final
             { 
                 Location = new Point(20, 120), 
                 Size = new Size(800, 430), 
+                Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
                 AllowDrop = true,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 RowHeadersVisible = false,
                 MultiSelect = false,
-                ReadOnly = false
+                ReadOnly = false,
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.Fixed3D,
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
+                GridColor = Color.FromArgb(224, 224, 224),
+                EnableHeadersVisualStyles = false
             };
+            dgvTasks.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
+            dgvTasks.ColumnHeadersDefaultCellStyle.Font = new Font(this.Font, FontStyle.Bold);
+            dgvTasks.ColumnHeadersDefaultCellStyle.ForeColor = Color.Black;
+            dgvTasks.ColumnHeadersHeight = 35;
+            dgvTasks.RowTemplate.Height = 30;
+            dgvTasks.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
+
             var colExpand = new DataGridViewTextBoxColumn { Name = "Expand", HeaderText = "", Width = 30, ReadOnly = true, DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter } };
             var colStatus = new DataGridViewCheckBoxColumn { Name = "Status", HeaderText = "完成", Width = 50, ReadOnly = false };
             var colContent = new DataGridViewTextBoxColumn { Name = "Content", HeaderText = "任務內容", Width = 350, ReadOnly = true };
@@ -609,16 +622,16 @@ namespace _1121538_徐霈綺_final
             dgvTasks.DragOver += DgvTasks_DragOver;
             dgvTasks.DragDrop += DgvTasks_DragDrop;
 
-            var btnNew = new Button { Text = "New File (建立新檔)", Location = new Point(20, 570), Width = 140 };
+            var btnNew = new Button { Text = "New File (建立新檔)", Location = new Point(20, 570), Width = 140, Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
             btnNew.Click += BtnNew_Click;
 
-            btnOpen = new Button { Text = "Open File", Location = new Point(170, 570), Width = 100 };
+            btnOpen = new Button { Text = "Open File", Location = new Point(170, 570), Width = 100, Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
             btnOpen.Click += BtnOpen_Click;
 
-            btnSave = new Button { Text = "Save", Location = new Point(280, 570), Width = 100 };
+            btnSave = new Button { Text = "Save", Location = new Point(280, 570), Width = 100, Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
             btnSave.Click += BtnSave_Click;
 
-            btnDelete = new Button { Text = "Delete", Location = new Point(390, 570), Width = 100 };
+            btnDelete = new Button { Text = "Delete", Location = new Point(390, 570), Width = 100, Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
             btnDelete.Click += BtnDelete_Click;
 
             this.Controls.Add(lblPath);
